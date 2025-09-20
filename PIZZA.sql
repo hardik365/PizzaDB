@@ -1,9 +1,4 @@
-﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
--- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
--- Modify this code to update the DB schema diagram.
--- To reset the sample schema, replace everything with
--- two dots ('..' - without quotes).
 
 CREATE TABLE `orders` (
     `row_id` int  NOT NULL ,
@@ -137,4 +132,5 @@ REFERENCES `shift` (`shift_id`);
 
 ALTER TABLE `rota` ADD CONSTRAINT `fk_rota_staff_id` FOREIGN KEY(`staff_id`)
 REFERENCES `staff` (`staff_id`);
+
 
