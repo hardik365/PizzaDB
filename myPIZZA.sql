@@ -157,3 +157,84 @@ CREATE TABLE rota (
     REFERENCES staff (staff_id)
     ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+USE mypizzadb;
+
+START TRANSACTION;
+
+-- 1) Customers
+INSERT INTO customers (cust_firstname, cust_lastname) VALUES
+('John','Doe'),
+('Jane','Smith');
+
+-- 2) Addresses
+INSERT INTO address (delivery_address1, delivery_address2, delivery_city, delivery_zipcode) VALUES
+('123 Main St', NULL, 'Metropolis', '12345'),
+('77 Broadway Ave', 'Apt 5B', 'Gotham', '10001');
+
+-- 3) Staff
+INSERT INTO staff (staff_id, first_name, last_name, position, hourly_rate) VALUES
+('S001','Mario','Rossi','Cook',22.50),
+('S002','Luigi','Bianchi','Cashier',18.00);
+
+-- 4) Shifts
+INSERT INTO shift (shift_id, day_of_week, start_time, end_time) VALUES
+('SH1','Monday','10:00:00','18:00:00'),
+('SH2','Saturday','16:00:00','23:00:00');
+
+-- 5) Items (menu)
+INSERT INTO item (item_id, sku, item_name, item_cat, item_size, item_price) VALUES
+('PZ001','SKU-PZ-001','Margherita Pizza','Pizza','12in',12.99),
+('PZ002','SKU-PZ-002','Pepperoni Pizza','Pizza','12in',14.49),
+('DR001','SKU-DR-001','Cola Can','Drink','12oz',1.99);
+
+-- 6) Ingredients
+INSERT INTO ingredient (ing_id, ing_name, ing_weight, ing_meas, ing_price) VALUES
+('ING001','Tomato Sauce',1000,'ml',4.50),
+('ING002','Mozzarella',1000,'g',7.80),
+('ING003','Pepperoni',1000,'g',9.20),
+('ING004','Basil',100,'g',1.20),
+('ING005','Dough Ball',10,'pcs',5.00);
+
+-- 7) Inventory (ingredient stock)
+INSERT INTO inventory (ing_id, quantity) VALUES
+('ING001', 10),
+('ING002', 8),
+('ING003', 5),
+('ING004', 3),
+('ING005', 20);
+
+-- 8) Recipes (which ingredients each item uses)
+-- Margherita: dough, sauce, mozzarella, basil
+INSERT INTO recipe (item_id, ing_id, quantity) VALUES
+('PZ001','ING005',1),
+('PZ001','ING001',150),
+('PZ001','ING002',120),
+('PZ001','ING004',5);
+
+-- Pepperoni: dough, sauce, mozzarella, pepperoni
+INSERT INTO recipe (item_id, ing_id, quantity) VALUES
+('PZ002','ING005',1),
+('PZ002','ING001',150),
+('PZ002','ING002',120),
+('PZ002','ING003',80);
+
+-- 9) Rota (who works when)
+INSERT INTO rota (rota_id, dt, shift_id, staff_id) VALUES
+('R001','2025-09-20 10:00:00','SH1','S001'),
+('R002','2025-09-20 16:00:00','SH2','S002');
+
+-- 10) Orders (header)
+INSERT INTO orders (order_id, created_at, cust_id, delivery, address_id) VALUES
+('O1001','2025-09-20 11:15:00', 1, 1, 1),
+('O1002','2025-09-20 18:30:00', 2, 0, 2);
+
+-- 11) Order items (lines)
+INSERT INTO order_items (order_id, item_id, quantity) VALUES
+('O1001','PZ001',2),
+('O1001','DR001',2),
+('O1002','PZ002',1),
+('O1002','PZ001',1);
+
+COMMIT;
+
